@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPARTAN GYM</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+    margin:0;
+    font-family:'Oswald',sans-serif;
+    background:#000;
+    color:#ff0000;
+}
+
+/* HEADER */
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 40px;
+}
+
+.logo{
+    font-size:36px;
+    font-weight:700;
+}
+
+.join-btn{
+    background:transparent;
+    border:2px solid #ff0000;
+    color:#ff0000;
+    padding:10px 25px;
+    border-radius:30px;
+    cursor:pointer;
+}
+
+.join-btn:hover{
+    background:#ff0000;
+    color:#000;
+}
+
+/* HERO */
+.hero{
+    width:100%;
+    max-height:500px;
+    overflow:hidden;
+}
+
+.hero img{
+    width:100%;
+    height:500px;
+    object-fit:cover;
+}
+
+/* GRID 2x5 */
+.equipment-section{
+    width:95%;
+    max-width:1400px;
+    margin:60px auto;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:40px;
+}
+
+.equipment-card{
+    background:#111;
+    border:1px solid #ff0000;
+    border-radius:25px;
+    padding:25px;
+    text-align:center;
+    cursor:pointer;
+}
+
+.equipment-card img{
+    width:100%;
+    height:200px;
+    object-fit:cover;
+    border-radius:15px;
+}
+
+.equipment-card p{
+    margin-top:15px;
+    font-size:20px;
+    font-weight:600;
+}
+
+/* IMPORTANT FIX — SAME WIDTH AS 2 GRID COLUMNS */
+.full-width-2{
+    grid-column: span 2;
+}
+
+/* CARD STYLE */
+.card{
+    padding:40px;
+    background:#111;
+    border-radius:25px;
+    border:1px solid #ff0000;
+    text-align:center;
+    font-size:22px;
+    margin-top:20px;
+}
+
+/* LOCATION */
+.location a{
+    color:#ff0000;
+    text-decoration:none;
+}
+
+/* MODAL (UNCHANGED) */
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    background:#111;
+    padding:30px;
+    border-radius:20px;
+    border:1px solid #ff0000;
+    width:90%;
+    max-width:400px;
+}
+
+.close{
+    float:right;
+    cursor:pointer;
+}
+
+@media(max-width:1000px){
+    .equipment-section{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">SPARTAN GYM</div>
+    <button class="join-btn" onclick="payNow()">JOIN</button>
+</header>
+
+<div class="hero">
+    <img src="header.jpg">
+</div>
+
+<div class="equipment-section">
+
+    <div class="equipment-card" onclick="openModal('Stationary Bike')">
+        <img src="bike.jpg">
+        <p>Stationary Bike</p>
+    </div>
+
+    <div class="equipment-card" onclick="openModal('Kettlebell')">
+        <img src="kettlebell.jpg">
+        <p>Kettlebell</p>
+    </div>
+
+    <div class="equipment-card" onclick="openModal('Barbell')">
+        <img src="barbell.jpg">
+        <p>Barbell</p>
+    </div>
+
+    <div class="equipment-card" onclick="openModal('Lat Pulldown')">
+        <img src="lat.jpg">
+        <p>Lat Pulldown</p>
+    </div>
+
+    <div class="equipment-card" onclick="openModal('Bench Press')">
+        <img src="bench.jpg">
+        <p>Bench Press</p>
+    </div>
+
+    <div class="equipment-card" onclick="openModal('Squat Rack')">
+        <img src="squat.jpg">
+        <p>Squat Rack</p>
+    </div>
+
+    <div class="equipment-card" onclick="openModal('Dumbbells')">
+        <img src="dumbbell.jpg">
+        <p>Dumbbells</p>
+    </div>
+
+    <div class="equipment-card" onclick="openModal('Treadmill')">
+        <img src="treadmill.jpg">
+        <p>Treadmill</p>
+    </div>
+
+    <div class="equipment-card" onclick="openModal('Cable Machine')">
+        <img src="cable.jpg">
+        <p>Cable Machine</p>
+    </div>
+
+    <div class="equipment-card" onclick="openModal('Smith Machine')">
+        <img src="smith.jpg">
+        <p>Smith Machine</p>
+    </div>
+
+    <!-- PLANS EXACTLY WIDTH OF 2 CARDS -->
+    <div class="full-width-2">
+        <div class="card">
+            About Plans<br><br>
+            Joining – 1500/-<br>
+            Monthly – 500/-
+        </div>
+    </div>
+
+    <!-- LOCATION EXACTLY WIDTH OF 2 CARDS -->
+    <div class="full-width-2">
+        <div class="card location">
+            📍 <a href="https://maps.app.goo.gl/AsagDupfQSvw7a4j6?g_st=aw" target="_blank">
+            View Gym Location on Google Maps
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<!-- MODAL (UNCHANGED STRUCTURE) -->
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">X</span>
+        <h3 id="modalTitle"></h3>
+        <p id="modalExercises"></p>
+    </div>
+</div>
+
+<script>
+
+/* Exercise Backend Mapping */
+const exercises = {
+    "Stationary Bike": "• Cardio Burn<br>• HIIT Ride<br>• Endurance Cycling",
+    "Kettlebell": "• Kettlebell Swings<br>• Goblet Squats<br>• Turkish Get-Up",
+    "Barbell": "• Deadlift<br>• Bench Press<br>• Overhead Press",
+    "Lat Pulldown": "• Wide Grip Pulldown<br>• Close Grip Pulldown<br>• Reverse Grip Pulldown",
+    "Bench Press": "• Flat Bench Press<br>• Incline Press<br>• Close Grip Press",
+    "Squat Rack": "• Back Squat<br>• Front Squat<br>• Lunges",
+    "Dumbbells": "• Bicep Curl<br>• Shoulder Press<br>• Dumbbell Fly",
+    "Treadmill": "• Sprint Intervals<br>• Incline Walk<br>• Fat Burn Run",
+    "Cable Machine": "• Cable Fly<br>• Tricep Pushdown<br>• Cable Row",
+    "Smith Machine": "• Smith Squat<br>• Smith Bench Press<br>• Calf Raises"
+};
+
+function openModal(machine){
+    document.getElementById("modal").style.display="flex";
+    document.getElementById("modalTitle").innerText=machine;
+    document.getElementById("modalExercises").innerHTML=exercises[machine];
+}
+
+function closeModal(){
+    document.getElementById("modal").style.display="none";
+}
+
+function payNow(){
+    window.location.href="upi://pay?pa=8638136604@ibl&pn=SPARTANGYM&cu=INR";
+}
+
+</script>
+
+</body>
+</html>
